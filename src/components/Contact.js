@@ -1,11 +1,14 @@
 import React from 'react';
 import ContactInfo from './ContactInfo';
+import ContactDetails from './ContactDetails';
+import Update from 'react-addons-update';
 
 export default class Contact extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       keyword: '',
+      selectedKey: -1,
       ContactData: [
         { name: 'Abet', phone:'010-0020-2929-2212' },
         { name: 'sofy', phone:'010-0020-2929-2213' },
@@ -15,12 +18,19 @@ export default class Contact extends React.Component{
       ]
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(e){
     this.setState({
       keyword: e.target.value
     });
+  }
+  handleClick(key){
+    this.setState({
+      selectedKey: key
+    });
+    // console.log(key + 'is selected');
   }
 
   render(){
@@ -33,12 +43,16 @@ export default class Contact extends React.Component{
       );
       return data.map((contact, i) => {
         return (
-          <ContactInfo contact={contact} key={i}/>
+          <ContactInfo
+            contact={contact}
+            key={i}
+            onClick={() => this.handleClick(i)}
+          />
         );
       }
       );
     }
-    console.log(this.state.keyword);
+    // console.log(this.state.keyword);
     return (
       <div>
         <h1>Contact</h1>
@@ -49,6 +63,10 @@ export default class Contact extends React.Component{
           onChange={this.handleChange}
         />
         {mapToComponent(this.state.ContactData)}
+        <ContactDetails
+          isSelected={this.state.selectedKey != -1}
+          contact={this.state.ContactData[this.state.selectedKey]}
+        />
       </div>
     );
   }
